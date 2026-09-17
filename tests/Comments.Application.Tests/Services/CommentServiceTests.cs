@@ -38,7 +38,6 @@ public class CommentServiceTests
 
         var service = new CommentService(repo.Object);
 
-        // Act
         var result = await service.GetPageAsync(1, CommentSortField.CreatedAt, SortDirection.Descending);
 
         // Assert: tree shape 1 → 2 → 3

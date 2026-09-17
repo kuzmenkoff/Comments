@@ -25,7 +25,6 @@ public class Comment
 
     public DateTimeOffset CreatedAt { get; set; }
 
-    public long? AttachmentId { get; set; }
     public Attachment? Attachment
     {
         get; set;
