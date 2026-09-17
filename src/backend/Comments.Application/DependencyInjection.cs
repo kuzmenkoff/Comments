@@ -1,6 +1,8 @@
-﻿using System.Reflection;
+﻿using Comments.Application.Abstractions;
+using Comments.Application.Services;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
+using System.Reflection;
 
 namespace Comments.Application;
 
@@ -11,6 +13,7 @@ public static class DependencyInjection
     {
         // Registers every AbstractValidator in this assembly.
         services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+        services.AddScoped<ICommentService, CommentService>();
 
 
         return services;
