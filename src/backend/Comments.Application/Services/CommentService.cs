@@ -12,7 +12,8 @@ namespace Comments.Application.Services;
 public class CommentService(
     ICommentRepository repository,
     IValidator<CreateCommentRequest> validator,
-    IHtmlSanitizer sanitizer) : ICommentService
+    IHtmlSanitizer sanitizer,
+    ICaptchaService captcha) : ICommentService
 {
     /// <inheritdoc />
     public async Task<PagedResult<CommentDto>> GetPageAsync(
@@ -51,6 +52,10 @@ public class CommentService(
     {
         // 1. Field validation (UserName/Email/HomePage/Text/Captcha* format).
         await validator.ValidateAndThrowAsync(request, ct);
+
+        if (!captcha.Verify(request.CaptchaId, request.CaptchaAnswer))
+            throw new ValidationException(
+                [new ValidationFailure(nameof(request.CaptchaAnswer), "Incorrect CAPTCHA.")]);
 
         // 2. Sanitize the text.
         var sanitized = sanitizer.Sanitize(request.Text);

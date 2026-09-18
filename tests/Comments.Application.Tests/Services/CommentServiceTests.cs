@@ -15,8 +15,12 @@ namespace Comments.Application.Tests.Services;
 public class CommentServiceTests
 {
     // Builds a service with the real validator + sanitizer and a given (mocked) repository.
-    private static CommentService CreateService(ICommentRepository repo) =>
-        new(repo, new CreateCommentRequestValidator(), new HtmlSanitizer());
+    private static CommentService CreateService(ICommentRepository repo, ICaptchaService? captcha = null)
+    {
+        captcha ??= Mock.Of<ICaptchaService>(c =>
+            c.Verify(It.IsAny<string>(), It.IsAny<string>()) == true);
+        return new(repo, new CreateCommentRequestValidator(), new HtmlSanitizer(), captcha);
+    }
 
     private static CreateCommentRequest ValidCreate() => new()
     {
@@ -184,5 +188,18 @@ public class CommentServiceTests
         var act = () => CreateService(repo.Object).CreateAsync(req);
 
         await act.Should().ThrowAsync<ValidationException>();
+    }
+
+    [Fact]
+    public async Task CreateAsync_rejects_wrong_captcha()
+    {
+        var repo = new Mock<ICommentRepository>();
+        var captcha = new Mock<ICaptchaService>();
+        captcha.Setup(c => c.Verify(It.IsAny<string>(), It.IsAny<string>())).Returns(false);
+
+        var act = () => CreateService(repo.Object, captcha.Object).CreateAsync(ValidCreate());
+
+        await act.Should().ThrowAsync<ValidationException>();
+        repo.Verify(r => r.AddAsync(It.IsAny<Comment>(), It.IsAny<CancellationToken>()), Times.Never);
     }
 }
