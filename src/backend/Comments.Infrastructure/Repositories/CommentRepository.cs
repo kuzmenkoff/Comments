@@ -17,7 +17,6 @@ public class CommentRepository(CommentsDbContext db) : ICommentRepository
     {
         var query = db.Comments.AsNoTracking().Where(c => c.ParentId == null);
 
-        // Dynamic ordering with a stable tie-breaker (Id) so paging is deterministic.
         IOrderedQueryable<Comment> ordered = (sortField, direction) switch
         {
             (CommentSortField.UserName, SortDirection.Ascending) => query.OrderBy(c => c.UserName),
@@ -57,7 +56,6 @@ public class CommentRepository(CommentsDbContext db) : ICommentRepository
         var parameters = ids.Select((id, i) => new SqlParameter($"@p{i}", id)).ToArray();
 
         // Recursive CTE walks the whole reply subtree in one round-trip.
-        // MAXRECURSION 0 removes SQL Server's default 100-level limit.
         var sql = $@"
 WITH Descendants AS (
     SELECT * FROM Comments WHERE ParentId IN ({placeholders})
