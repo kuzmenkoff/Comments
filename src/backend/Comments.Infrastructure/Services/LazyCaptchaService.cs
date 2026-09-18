@@ -11,7 +11,7 @@ public class LazyCaptchaService(ICaptcha captcha) : ICaptchaService
     {
         var id = Guid.NewGuid().ToString("N");
         var data = captcha.Generate(id);           // renders image + stores the code under this id
-        return new CaptchaChallenge(id, data.Base64); // Base64 is a ready "data:image/...;base64,..." string
+        return new CaptchaChallenge(id, data.Base64);
     }
 
     public bool Verify(string captchaId, string answer)
