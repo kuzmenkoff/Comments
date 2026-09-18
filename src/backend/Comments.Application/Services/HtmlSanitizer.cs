@@ -32,7 +32,7 @@ public class HtmlSanitizer : IHtmlSanitizer
         catch (XmlException ex)
         {
             return SanitizationResult.Invalid(
-                $"Text is not valid XHTML — check that every tag is properly closed. ({ex.Message})");
+                $"Text is not valid XHTML - check that every tag is properly closed. ({ex.Message})");
         }
 
         var errors = new List<string>();

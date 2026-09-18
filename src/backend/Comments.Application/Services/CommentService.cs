@@ -1,13 +1,20 @@
-﻿using Comments.Application.Abstractions;
+﻿
+using Comments.Application.Abstractions;
 using Comments.Application.Common;
 using Comments.Application.Dtos;
 using Comments.Domain.Entities;
+using FluentValidation;
+using FluentValidation.Results;
 
 namespace Comments.Application.Services;
 
 /// <summary>Reads comments and assembles flat rows into reply trees.</summary>
-public class CommentService(ICommentRepository repository) : ICommentService
+public class CommentService(
+    ICommentRepository repository,
+    IValidator<CreateCommentRequest> validator,
+    IHtmlSanitizer sanitizer) : ICommentService
 {
+    /// <inheritdoc />
     public async Task<PagedResult<CommentDto>> GetPageAsync(
         int page,
         CommentSortField sortField,
@@ -37,6 +44,38 @@ public class CommentService(ICommentRepository repository) : ICommentService
             PageSize = roots.PageSize,
             TotalCount = roots.TotalCount
         };
+    }
+
+    /// <inheritdoc />
+    public async Task<CommentDto> CreateAsync(CreateCommentRequest request, CancellationToken ct = default)
+    {
+        // 1. Field validation (UserName/Email/HomePage/Text/Captcha* format).
+        await validator.ValidateAndThrowAsync(request, ct);
+
+        // 2. Sanitize the text.
+        var sanitized = sanitizer.Sanitize(request.Text);
+        if (!sanitized.IsValid)
+            throw new ValidationException(
+                sanitized.Errors.Select(e => new ValidationFailure(nameof(request.Text), e)));
+
+        // 3. A reply must point to an existing parent.
+        if (request.ParentId is { } parentId && !await repository.ExistsAsync(parentId, ct))
+            throw new ValidationException(
+                [new ValidationFailure(nameof(request.ParentId), "Parent comment does not exist.")]);
+
+        // 4. Build and persist.
+        var comment = new Comment
+        {
+            ParentId = request.ParentId,
+            UserName = request.UserName,
+            Email = request.Email,
+            HomePage = request.HomePage,
+            Text = sanitized.Value,
+            CreatedAt = DateTimeOffset.UtcNow
+        };
+
+        var saved = await repository.AddAsync(comment, ct);
+        return MapToDto(saved);
     }
 
     /// <summary>Links flat comments into trees by ParentId; returns the roots in their given order.</summary>
