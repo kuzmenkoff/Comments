@@ -14,6 +14,7 @@ public static class DependencyInjection
         // Registers every AbstractValidator in this assembly.
         services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
         services.AddScoped<ICommentService, CommentService>();
+        services.AddSingleton<IHtmlSanitizer, HtmlSanitizer>();
 
 
         return services;
