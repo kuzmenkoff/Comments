@@ -15,6 +15,7 @@ public static class DependencyInjection
         services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
         services.AddScoped<ICommentService, CommentService>();
         services.AddSingleton<IHtmlSanitizer, HtmlSanitizer>();
+        services.AddSingleton<IAttachmentService, AttachmentService>();
 
 
         return services;

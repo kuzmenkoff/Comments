@@ -1,4 +1,5 @@
-﻿using Comments.Application.Abstractions;
+﻿using Comments.Api.Models;
+using Comments.Application.Abstractions;
 using Comments.Application.Common;
 using Comments.Application.Dtos;
 using Microsoft.AspNetCore.Mvc;
@@ -28,8 +29,9 @@ public class CommentsController(ICommentService commentService) : ControllerBase
     /// <summary>Creates a comment, or a reply when ParentId is set.</summary>
     [HttpPost]
     public async Task<ActionResult<CommentDto>> Create(
-        [FromBody] CreateCommentRequest request, CancellationToken ct)
+        [FromForm] CreateCommentForm form, CancellationToken ct)
     {
+        var request = await form.ToRequestAsync(ct);
         var created = await commentService.CreateAsync(request, ct);
         return CreatedAtAction(nameof(GetPage), created);
     }

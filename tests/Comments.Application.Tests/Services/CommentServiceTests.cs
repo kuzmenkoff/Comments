@@ -15,11 +15,15 @@ namespace Comments.Application.Tests.Services;
 public class CommentServiceTests
 {
     // Builds a service with the real validator + sanitizer and a given (mocked) repository.
-    private static CommentService CreateService(ICommentRepository repo, ICaptchaService? captcha = null)
+    private static CommentService CreateService(
+        ICommentRepository repo,
+        ICaptchaService? captcha = null,
+        IAttachmentService? attachments = null)
     {
         captcha ??= Mock.Of<ICaptchaService>(c =>
             c.Verify(It.IsAny<string>(), It.IsAny<string>()) == true);
-        return new(repo, new CreateCommentRequestValidator(), new HtmlSanitizer(), captcha);
+        attachments ??= Mock.Of<IAttachmentService>();
+        return new(repo, new CreateCommentRequestValidator(), new HtmlSanitizer(), captcha, attachments);
     }
 
     private static CreateCommentRequest ValidCreate() => new()
