@@ -1,0 +1,31 @@
+.comments-table { 
+    width: 100%; 
+    border-collapse: collapse; 
+}
+
+.comments-table th, .comments-table td { 
+    text-align: left; 
+    padding: 8px; 
+    border-bottom: 1px solid #eee; 
+}
+
+.comments-table th { 
+    cursor: pointer; 
+    user-select: none; 
+    background: #fafafa; 
+}
+
+.comments-table tr.row { 
+    cursor: pointer; 
+}
+
+.comments-table tr.row:hover { 
+    background: #f5f7ff; 
+}
+
+.pager { 
+    display: flex; 
+    gap: 12px; 
+    align-items: center; 
+    margin-top: 12px; 
+}
