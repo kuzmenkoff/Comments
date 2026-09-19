@@ -1,39 +1,43 @@
 <div class="comment">
-  <div class="comment-head">
-    <strong>{{ comment.userName }}</strong>
-    @if (comment.homePage) {
-      <a [href]="comment.homePage" target="_blank" rel="noopener">🔗</a>
-    }
-    <span class="date">{{ comment.createdAt | date: 'dd.MM.yy HH:mm' }}</span>
-  </div>
+    <div class="comment-head">
+        <strong>{{ comment.userName }}</strong>
+        @if (comment.homePage) {
+        <a [href]="comment.homePage" target="_blank" rel="noopener">🔗</a>
+        }
+        <span class="date">{{ comment.createdAt | date: 'dd.MM.yy HH:mm' }}</span>
+    </div>
 
-  <!-- Text is already sanitized on the server; Angular re-sanitizes on binding. -->
-  <div class="comment-text" [innerHTML]="comment.text"></div>
+    <!-- Text is already sanitized on the server; Angular re-sanitizes on binding. -->
+    <div class="comment-text" [innerHTML]="comment.text"></div>
 
-  @if (comment.attachment) {
+    @if (comment.attachment) {
     <div class="attach">
-      @if (isImage(comment)) {
-        <img class="thumb"
-             [src]="comments.attachmentUrl(comment.attachment.id)"
-             [alt]="comment.attachment.fileName" />
-      } @else {
-        <a [href]="comments.attachmentUrl(comment.attachment.id)" target="_blank">
-          {{ comment.attachment.fileName }}
+        @if (isImage(comment)) {
+        <a [href]="comments.attachmentUrl(comment.attachment.id)"
+            [attr.data-lightbox]="'comment-' + comment.id"
+            [attr.data-title]="comment.attachment.fileName">
+            <img class="thumb"
+                [src]="comments.attachmentUrl(comment.attachment.id)"
+                [alt]="comment.attachment.fileName" />
         </a>
-      }
+        } @else {
+        <a [href]="comments.attachmentUrl(comment.attachment.id)" target="_blank">
+            {{ comment.attachment.fileName }}
+        </a>
+        }
     </div>
-  }
+    }
 
-  <button type="button" class="reply-btn" (click)="showReply = !showReply">Reply</button>
-  @if (showReply) {
-    <app-comment-form [parentId]="comment.id" (done)="showReply = false" />
-  }
+    <button type="button" class="reply-btn" (click)="showReply = !showReply">Reply</button>
+    @if (showReply) {
+        <app-comment-form [parentId]="comment.id" (done)="showReply = false" />
+    }
 
-  @if (comment.replies.length) {
-    <div class="replies">
-      @for (reply of comment.replies; track reply.id) {
-        <app-comment-item [comment]="reply" />
-      }
-    </div>
-  }
+    @if (comment.replies.length) {
+        <div class="replies">
+        @for (reply of comment.replies; track reply.id) {
+            <app-comment-item [comment]="reply" />
+        }
+        </div>
+    }
 </div>
