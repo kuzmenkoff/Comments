@@ -1,0 +1,34 @@
+.comments-table { 
+    width: 100%; 
+    border-collapse: collapse; 
+}
+
+.comments-table th, .comments-table td { 
+    text-align: left; 
+    padding: 8px; 
+}
+
+.comments-table th { 
+    cursor: pointer; 
+    user-select: none; 
+    background: #fafafa; 
+    border-bottom: 2px solid #e2e2e2; 
+}
+
+.comments-table tr.summary td { 
+    padding-top: 14px; 
+    font-size: 13px; 
+    color: #555; 
+}
+
+.comments-table tr.detail td { 
+    border-bottom: 1px solid #eee; 
+    padding-bottom: 14px; 
+}
+
+.pager { 
+    display: flex; 
+    gap: 12px; 
+    align-items: center; 
+    margin-top: 12px; 
+}

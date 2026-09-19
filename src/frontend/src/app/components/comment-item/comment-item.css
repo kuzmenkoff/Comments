@@ -1,0 +1,43 @@
+.comment { 
+    padding: 8px 0; 
+}
+
+.comment-head { 
+    display: flex; 
+    gap: 8px; 
+    align-items: baseline; 
+}
+
+.comment-head .date { 
+    color: #888; 
+    font-size: 12px; 
+}
+
+.comment-text { 
+    margin: 4px 0; 
+}
+
+.thumb { 
+    max-width: 320px; 
+    max-height: 240px; 
+    display: block; 
+    margin-top: 6px; 
+    cursor: pointer; 
+}
+
+.attach { 
+    display: block; 
+    margin-top: 6px; 
+} 
+
+.reply-btn { 
+    display: inline-block; 
+    margin-top: 10px; 
+}
+
+.replies { 
+    margin-left: 24px; 
+    border-left: 2px solid #eee; 
+    padding-left: 12px; 
+    margin-top: 8px;
+}
