@@ -6,6 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Comments.Api.Controllers;
 
+public record PreviewRequest(string Text);
+public record PreviewResponse(string Html);
+
 /// <summary>HTTP endpoints for reading and creating comments.</summary>
 [ApiController]
 [Route("api/[controller]")]
@@ -34,5 +37,13 @@ public class CommentsController(ICommentService commentService) : ControllerBase
         var request = await form.ToRequestAsync(ct);
         var created = await commentService.CreateAsync(request, ct);
         return CreatedAtAction(nameof(GetPage), created);
+    }
+
+    /// <summary>Returns the sanitized HTML preview of a comment's text (no persistence).</summary>
+    [HttpPost("preview")]
+    public ActionResult<PreviewResponse> Preview([FromBody] PreviewRequest request)
+    {
+        var html = commentService.Preview(request.Text);
+        return Ok(new PreviewResponse(html));
     }
 }

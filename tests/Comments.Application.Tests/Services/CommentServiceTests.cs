@@ -206,4 +206,20 @@ public class CommentServiceTests
         await act.Should().ThrowAsync<ValidationException>();
         repo.Verify(r => r.AddAsync(It.IsAny<Comment>(), It.IsAny<CancellationToken>()), Times.Never);
     }
+
+    [Fact]
+    public void Preview_returns_sanitized_html()
+    {
+        var repo = new Mock<ICommentRepository>();
+        var html = CreateService(repo.Object).Preview("Hi <strong>there</strong>");
+        html.Should().Contain("<strong>");
+    }
+
+    [Fact]
+    public void Preview_throws_on_invalid_markup()
+    {
+        var repo = new Mock<ICommentRepository>();
+        var act = () => CreateService(repo.Object).Preview("<script>alert(1)</script>");
+        act.Should().Throw<ValidationException>();
+    }
 }

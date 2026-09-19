@@ -116,6 +116,16 @@ public class CommentService(
         return att is null ? null : new AttachmentContent(att.Content, att.ContentType, att.FileName);
     }
 
+    /// <inheritdoc />
+    public string Preview(string text)
+    {
+        var result = sanitizer.Sanitize(text);
+        if (!result.IsValid)
+            throw new ValidationException(
+                result.Errors.Select(e => new ValidationFailure(nameof(text), e)));
+        return result.Value;
+    }
+
     private static CommentDto MapToDto(Comment c) => new()
     {
         Id = c.Id,

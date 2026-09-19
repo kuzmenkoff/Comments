@@ -22,4 +22,7 @@ public interface ICommentService
 
     /// <summary>Returns an attachment's raw bytes for download / lightbox, or null if not found.</summary>
     Task<AttachmentContent?> GetAttachmentAsync(long attachmentId, CancellationToken ct = default);
+
+    /// <summary>Sanitizes text and returns the safe HTML that would be stored - without saving.</summary>
+    string Preview(string text);
 }
