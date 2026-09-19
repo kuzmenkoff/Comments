@@ -13,7 +13,8 @@ public class CommentService(
     ICommentRepository repository,
     IValidator<CreateCommentRequest> validator,
     IHtmlSanitizer sanitizer,
-    ICaptchaService captcha) : ICommentService
+    ICaptchaService captcha,
+    IAttachmentService attachments) : ICommentService
 {
     /// <inheritdoc />
     public async Task<PagedResult<CommentDto>> GetPageAsync(
@@ -76,7 +77,8 @@ public class CommentService(
             Email = request.Email,
             HomePage = request.HomePage,
             Text = sanitized.Value,
-            CreatedAt = DateTimeOffset.UtcNow
+            CreatedAt = DateTimeOffset.UtcNow,
+            Attachment = request.File is null ? null : attachments.Create(request.File)
         };
 
         var saved = await repository.AddAsync(comment, ct);
@@ -105,6 +107,13 @@ public class CommentService(
 
         // Return roots preserving the sorted/paginated order from the repository.
         return roots.Select(r => byId[r.Id]).ToList();
+    }
+
+    /// <inheritdoc />
+    public async Task<AttachmentContent?> GetAttachmentAsync(long attachmentId, CancellationToken ct = default)
+    {
+        var att = await repository.GetAttachmentAsync(attachmentId, ct);
+        return att is null ? null : new AttachmentContent(att.Content, att.ContentType, att.FileName);
     }
 
     private static CommentDto MapToDto(Comment c) => new()

@@ -19,4 +19,7 @@ public interface ICommentService
     /// Creates a new top-level comment or reply.
     /// </summary>
     Task<CommentDto> CreateAsync(CreateCommentRequest request, CancellationToken ct = default);
+
+    /// <summary>Returns an attachment's raw bytes for download / lightbox, or null if not found.</summary>
+    Task<AttachmentContent?> GetAttachmentAsync(long attachmentId, CancellationToken ct = default);
 }

@@ -32,6 +32,7 @@ public static class DependencyInjection
 
         services.AddScoped<ICommentRepository, CommentRepository>();
         services.AddScoped<ICaptchaService, LazyCaptchaService>();
+        services.AddSingleton<IImageProcessor, ImageSharpProcessor>();
 
         return services;
     }
