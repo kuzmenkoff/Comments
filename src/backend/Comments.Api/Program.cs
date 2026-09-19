@@ -1,6 +1,8 @@
 using Comments.Api;
 using Comments.Application;
 using Comments.Infrastructure;
+using Comments.Infrastructure.Persistence;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,5 +35,11 @@ if (app.Environment.IsDevelopment())
 
 app.UseCors("frontend");
 app.MapControllers();
+
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<CommentsDbContext>();
+    db.Database.Migrate();
+}
 
 app.Run();
