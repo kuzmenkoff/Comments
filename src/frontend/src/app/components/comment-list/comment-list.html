@@ -8,16 +8,14 @@
   </thead>
   <tbody>
     @for (c of comments(); track c.id) {
-      <tr class="row" (click)="toggle(c.id)">
+      <tr class="summary">
         <td>{{ c.userName }}</td>
         <td>{{ c.email }}</td>
         <td>{{ c.createdAt | date: 'dd.MM.yy HH:mm' }}</td>
       </tr>
-      @if (expandedId() === c.id) {
-        <tr class="detail">
-          <td colspan="3"><app-comment-item [comment]="c" /></td>
-        </tr>
-      }
+      <tr class="detail">
+        <td colspan="3"><app-comment-item [comment]="c" /></td>
+      </tr>
     } @empty {
       <tr><td colspan="3">No comments yet.</td></tr>
     }

@@ -1,4 +1,4 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { CommentDto, CommentSortField, SortDirection } from '../../models/comment.models';
 import { CommentsService } from '../../services/comments.service';
@@ -16,12 +16,12 @@ export class CommentList implements OnInit {
   readonly totalPages = signal(1);
   readonly sort = signal<CommentSortField>('CreatedAt');
   readonly direction = signal<SortDirection>('Descending');
-  readonly expandedId = signal<number | null>(null);
 
-  constructor(private service: CommentsService) {}
+  private service = inject(CommentsService);
 
   ngOnInit(): void {
     this.load();
+    this.service.onReload.subscribe(() => this.load());
   }
 
   load(): void {
@@ -46,10 +46,6 @@ export class CommentList implements OnInit {
     if (p < 1 || p > this.totalPages()) return;
     this.page.set(p);
     this.load();
-  }
-
-  toggle(id: number): void {
-    this.expandedId.set(this.expandedId() === id ? null : id);
   }
 
   indicator(field: CommentSortField): string {

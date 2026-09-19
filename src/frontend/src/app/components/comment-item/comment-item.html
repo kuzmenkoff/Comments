@@ -11,15 +11,22 @@
   <div class="comment-text" [innerHTML]="comment.text"></div>
 
   @if (comment.attachment) {
-    @if (isImage(comment)) {
-      <img class="thumb"
-           [src]="comments.attachmentUrl(comment.attachment.id)"
-           [alt]="comment.attachment.fileName" />
-    } @else {
-      <a [href]="comments.attachmentUrl(comment.attachment.id)" target="_blank">
-        📄 {{ comment.attachment.fileName }}
-      </a>
-    }
+    <div class="attach">
+      @if (isImage(comment)) {
+        <img class="thumb"
+             [src]="comments.attachmentUrl(comment.attachment.id)"
+             [alt]="comment.attachment.fileName" />
+      } @else {
+        <a [href]="comments.attachmentUrl(comment.attachment.id)" target="_blank">
+          {{ comment.attachment.fileName }}
+        </a>
+      }
+    </div>
+  }
+
+  <button type="button" class="reply-btn" (click)="showReply = !showReply">Reply</button>
+  @if (showReply) {
+    <app-comment-form [parentId]="comment.id" (done)="showReply = false" />
   }
 
   @if (comment.replies.length) {

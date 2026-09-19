@@ -1,0 +1,60 @@
+<form [formGroup]="form" (ngSubmit)="submit()" class="comment-form">
+  <div class="fields">
+    <label>
+      User Name
+      <input formControlName="userName" />
+      @if (form.controls.userName.touched && form.controls.userName.invalid) {
+        <small class="err">Latin letters and digits only.</small>
+      }
+    </label>
+    <label>
+      E-mail
+      <input formControlName="email" />
+      @if (form.controls.email.touched && form.controls.email.invalid) {
+        <small class="err">Valid e-mail required.</small>
+      }
+    </label>
+    <label>
+      Home page
+      <input formControlName="homePage" placeholder="https://... (optional)" />
+    </label>
+  </div>
+
+  <div class="toolbar">
+    <button type="button" (click)="insertTag('i')">[i]</button>
+    <button type="button" (click)="insertTag('strong')">[strong]</button>
+    <button type="button" (click)="insertTag('code')">[code]</button>
+    <button type="button" (click)="insertTag('a')">[a]</button>
+  </div>
+
+  <textarea #textArea formControlName="text" rows="4" placeholder="Text (allowed: a, code, i, strong)"></textarea>
+  @if (form.controls.text.touched && form.controls.text.invalid) {
+    <small class="err">Text is required.</small>
+  }
+
+  <div class="captcha">
+    <img [src]="captchaImage()" alt="captcha" />
+    <button type="button" (click)="loadCaptcha()" title="Refresh">↻</button>
+    <input formControlName="captchaAnswer" placeholder="Enter code" />
+  </div>
+
+  <div class="file">
+    <input type="file" (change)="onFile($event)" accept=".jpg,.jpeg,.png,.gif,.txt" />
+  </div>
+
+  <div class="actions">
+    <button type="button" (click)="preview()">Preview</button>
+    <button type="submit" class="primary">Send</button>
+    @if (parentId != null) {
+      <button type="button" (click)="done.emit()">Cancel</button>
+    }
+  </div>
+
+  @if (previewHtml() !== null) {
+    <div class="preview"><strong>Preview:</strong><div [innerHTML]="previewHtml()"></div></div>
+  }
+
+  @if (errors().length) {
+    <ul class="errors">@for (e of errors(); track e) { <li>{{ e }}</li> }</ul>
+  }
+</form>

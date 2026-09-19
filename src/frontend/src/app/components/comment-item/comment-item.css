@@ -25,8 +25,19 @@
     cursor: pointer; 
 }
 
+.attach { 
+    display: block; 
+    margin-top: 6px; 
+} 
+
+.reply-btn { 
+    display: inline-block; 
+    margin-top: 10px; 
+}
+
 .replies { 
     margin-left: 24px; 
     border-left: 2px solid #eee; 
     padding-left: 12px; 
+    margin-top: 8px;
 }

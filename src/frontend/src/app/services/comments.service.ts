@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { environment } from '../../environments/environment';
 import {
   CaptchaResponse, CommentDto, CommentSortField, PagedResult, SortDirection
@@ -9,6 +9,9 @@ import {
 @Injectable({ providedIn: 'root' })
 export class CommentsService {
   private readonly api = environment.apiUrl;
+  private readonly reload = new Subject<void>();
+  readonly onReload = this.reload.asObservable();
+  notifyReload(): void { this.reload.next(); }
 
   constructor(private http: HttpClient) {}
 

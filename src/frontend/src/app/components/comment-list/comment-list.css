@@ -6,21 +6,24 @@
 .comments-table th, .comments-table td { 
     text-align: left; 
     padding: 8px; 
-    border-bottom: 1px solid #eee; 
 }
 
 .comments-table th { 
     cursor: pointer; 
     user-select: none; 
     background: #fafafa; 
+    border-bottom: 2px solid #e2e2e2; 
 }
 
-.comments-table tr.row { 
-    cursor: pointer; 
+.comments-table tr.summary td { 
+    padding-top: 14px; 
+    font-size: 13px; 
+    color: #555; 
 }
 
-.comments-table tr.row:hover { 
-    background: #f5f7ff; 
+.comments-table tr.detail td { 
+    border-bottom: 1px solid #eee; 
+    padding-bottom: 14px; 
 }
 
 .pager { 
