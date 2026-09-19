@@ -1,12 +1,10 @@
 <Solution>
   <Folder Name="/src/" />
   <Folder Name="/src/backend/">
+    <Project Path="src/backend/Comments.Api/Comments.Api.csproj" />
     <Project Path="src/backend/Comments.Application/Comments.Application.csproj" />
     <Project Path="src/backend/Comments.Domain/Comments.Domain.csproj" />
     <Project Path="src/backend/Comments.Infrastructure/Comments.Infrastructure.csproj" />
-  </Folder>
-  <Folder Name="/src/backend/Comments.Api/">
-    <Project Path="src/backend/Comments.Api/Comments.WebApi.csproj" />
   </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/Comments.Application.Tests/Comments.Application.Tests.csproj" />

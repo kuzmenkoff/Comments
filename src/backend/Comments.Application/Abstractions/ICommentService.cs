@@ -14,4 +14,9 @@ public interface ICommentService
         CommentSortField sortField,
         SortDirection direction,
         CancellationToken ct = default);
+
+    /// <summary>
+    /// Creates a new top-level comment or reply.
+    /// </summary>
+    Task<CommentDto> CreateAsync(CreateCommentRequest request, CancellationToken ct = default);
 }
